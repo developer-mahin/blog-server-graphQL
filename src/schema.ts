@@ -15,17 +15,26 @@ export const typeDefs = `#graphql
         bio:String
     ):AuthType
 
-
     signin (
       email:String!
       password: String!
     ): AuthType
+
+    createPost(
+      title:String!
+      des:String!
+    ): PostType
 
   }
 
   type AuthType {
     error:String
     token:String
+  }
+
+  type PostType {
+    error:String
+    post:Post
   }
 
   type Post {
