@@ -20,6 +20,14 @@ export const resolvers = {
         },
       });
     },
+
+    profile: async (parent: any, args: any, context: any) => {
+      return await prisma.profile.findUnique({
+        where: {
+          userId: args.userId,
+        },
+      });
+    },
   },
 
   Mutation: {
@@ -48,6 +56,15 @@ export const resolvers = {
           password: hashPassword,
         },
       });
+
+      if (args?.bio) {
+        await prisma.profile.create({
+          data: {
+            userId: newUser.id,
+            bio: args.bio,
+          },
+        });
+      }
 
       const userData = {
         email,
@@ -93,7 +110,21 @@ export const resolvers = {
         };
       }
 
-      console.log(matchedPassword);
+      const userData = {
+        email: userExist.email,
+        userId: userExist.id,
+      };
+
+      const token = await generateToken(
+        userData,
+        config.jwt.secret as Secret,
+        config.jwt.expiresIn as string
+      );
+
+      return {
+        error: null,
+        token,
+      };
     },
   },
 };

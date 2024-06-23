@@ -30,6 +30,13 @@ exports.resolvers = {
                 },
             });
         }),
+        profile: (parent, args, context) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield prisma.profile.findUnique({
+                where: {
+                    userId: args.userId,
+                },
+            });
+        }),
     },
     Mutation: {
         signup: (parent, args, context) => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,6 +60,14 @@ exports.resolvers = {
                     password: hashPassword,
                 },
             });
+            if (args === null || args === void 0 ? void 0 : args.bio) {
+                yield prisma.profile.create({
+                    data: {
+                        userId: newUser.id,
+                        bio: args.bio,
+                    },
+                });
+            }
             const userData = {
                 email,
                 userId: newUser.id,
@@ -83,7 +98,15 @@ exports.resolvers = {
                     token: null,
                 };
             }
-            console.log(matchedPassword);
+            const userData = {
+                email: userExist.email,
+                userId: userExist.id,
+            };
+            const token = yield (0, generateToken_1.generateToken)(userData, config_1.default.jwt.secret, config_1.default.jwt.expiresIn);
+            return {
+                error: null,
+                token,
+            };
         }),
     },
 };

@@ -2,6 +2,7 @@ export const typeDefs = `#graphql
 
   type Query {
     user(userId: ID!): User
+    profile(userId:ID!): Profile
     allUsers: [User]
     posts: [Post]
   }
@@ -11,17 +12,18 @@ export const typeDefs = `#graphql
         name: String!,
         email: String!,
         password: String!
-    ):authType
+        bio:String
+    ):AuthType
 
 
     signin (
       email:String!
       password: String!
-    ): authType
+    ): AuthType
 
   }
 
-  type authType {
+  type AuthType {
     error:String
     token:String
   }
