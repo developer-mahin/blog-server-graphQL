@@ -28,6 +28,16 @@ exports.typeDefs = `#graphql
       des:String!
     ): PostType
 
+    updatePost(
+      postId: ID!
+      title:String
+      des:String
+    ):PostType
+
+    deletePost(
+      postId:ID!
+    ):PostType
+
   }
 
   type AuthType {
