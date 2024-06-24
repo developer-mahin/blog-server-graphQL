@@ -132,4 +132,52 @@ exports.postMutation = {
             post: deletePost,
         };
     }),
+    updatePublishStatus: (parent, args, { prisma, userInfo }) => __awaiter(void 0, void 0, void 0, function* () {
+        if (!userInfo) {
+            return {
+                error: "Forbidden Access",
+                post: null,
+            };
+        }
+        const user = yield prisma.user.findUnique({
+            where: {
+                id: userInfo.userId,
+            },
+        });
+        if (!user) {
+            return {
+                error: "User not found",
+                post: null,
+            };
+        }
+        const post = yield prisma.post.findUnique({
+            where: {
+                id: args.postId,
+            },
+        });
+        if (!post) {
+            return {
+                error: "post not found",
+                post: null,
+            };
+        }
+        if (user.id !== post.userId) {
+            return {
+                error: "You are not the owner",
+                post: null,
+            };
+        }
+        const updatePost = yield prisma.post.update({
+            where: {
+                id: args.postId,
+            },
+            data: {
+                isPublished: args.isPublished,
+            },
+        });
+        return {
+            error: null,
+            post: updatePost,
+        };
+    }),
 };

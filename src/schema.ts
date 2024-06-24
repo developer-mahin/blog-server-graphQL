@@ -35,6 +35,11 @@ export const typeDefs = `#graphql
       postId:ID!
     ):PostType
 
+    updatePublishStatus(
+      postId:ID! 
+      isPublished:Boolean!
+    ): PostType
+
   }
 
   type AuthType {
